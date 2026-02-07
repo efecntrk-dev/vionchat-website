@@ -1,45 +1,1353 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="dark scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vion Chat - Çok Yakında!</title>
+    <title>Vion Chat - Sesin Yeni Boyutu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 95,50 50,95 5,50' fill='%236366f1'/><polygon points='50,20 80,50 50,80 20,50' fill='%23818cf8'/><polygon points='50,35 65,50 50,65 35,50' fill='white'/></svg>">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        vion: {
+                            primary: '#6366f1',
+                            secondary: '#8b5cf6',
+                            accent: '#ec4899',
+                            dark: '#0a0a1a',
+                            darker: '#050510',
+                            card: '#12122a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            background-color: #1e1e2e; /* Koyu tema */
-            color: #cdd6f4; /* Açık renk yazı */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+
+        /* Light Mode Styles */
+        html:not(.dark) body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #f8fafc 100%);
+        }
+
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        html:not(.dark) .orb {
+            opacity: 0.15;
+        }
+
+        html:not(.dark) .text-gray-300 {
+            color: #4b5563;
+        }
+
+        html:not(.dark) .text-gray-400 {
+            color: #6b7280;
+        }
+
+        html:not(.dark) .text-gray-500 {
+            color: #9ca3af;
+        }
+
+        html:not(.dark) .text-white {
+            color: #1f2937;
+        }
+
+        html:not(.dark) .navbar-scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* ========== PRELOADER ========== */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: #0a0a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-diamond {
+            width: 80px;
+            height: 80px;
+            animation: preloaderSpin 1.5s ease-in-out infinite;
+        }
+
+        @keyframes preloaderSpin {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* ========== 3D ROTATING DIAMOND ========== */
+        .diamond-3d {
+            perspective: 1000px;
+        }
+
+        .diamond-3d-inner {
+            transform-style: preserve-3d;
+            animation: diamond3DRotate 8s linear infinite;
+        }
+
+        @keyframes diamond3DRotate {
+            0% {
+                transform: rotateY(0deg) rotateX(10deg);
+            }
+
+            50% {
+                transform: rotateY(180deg) rotateX(-10deg);
+            }
+
+            100% {
+                transform: rotateY(360deg) rotateX(10deg);
+            }
+        }
+
+        .diamond-3d:hover .diamond-3d-inner {
+            animation-play-state: paused;
+        }
+
+        /* ========== CURSOR TRAIL ========== */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #6366f1, #ec4899);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 0 10px #6366f1, 0 0 20px #ec4899;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9997;
+        }
+
+        /* ========== MOBILE MENU ========== */
+        .hamburger {
+            display: flex;
             flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 100;
         }
-        h1 {
-            font-size: 3rem;
-            color: #89b4fa; /* Mavi başlık */
-            margin-bottom: 0;
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
         }
-        h2 {
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 350px;
+            height: 100vh;
+            background: rgba(10, 10, 26, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 100px 40px 40px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 90;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 20px 0;
             font-size: 1.5rem;
-            color: #a6e3a1; /* Yeşil alt başlık */
-            margin-top: 10px;
+            font-weight: 600;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
-        p {
+
+        .mobile-menu a:hover {
+            color: #6366f1;
+            padding-left: 10px;
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 80;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(99, 102, 241, 0.3);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        html:not(.dark) .theme-toggle {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* ========== ANIMATED DIAMOND LOGO ========== */
+        .diamond-logo {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            animation: diamondFloat 3s ease-in-out infinite;
+        }
+
+        .diamond-logo svg {
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .diamond-logo:hover svg {
+            filter: drop-shadow(0 0 40px rgba(99, 102, 241, 1));
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .diamond-logo::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            background: linear-gradient(45deg, #6366f1, #ec4899, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: spin 3s linear infinite;
+            z-index: -1;
+        }
+
+        .diamond-logo:hover::before {
+            opacity: 0.5;
+        }
+
+        @keyframes diamondFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-5px) rotate(3deg);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ========== HERO DIAMOND ANIMATION ========== */
+        .hero-diamond {
+            position: relative;
+            animation: heroFloat 4s ease-in-out infinite;
+        }
+
+        .hero-diamond::before {
+            content: '';
+            position: absolute;
+            inset: -30%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            75% {
+                transform: translateY(10px) rotate(-3deg);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* ========== GRADIENT TEXT ========== */
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8, #ec4899, #8b5cf6);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease infinite;
+        }
+
+        @keyframes gradientMove {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* ========== NEON BUTTONS ========== */
+        .neon-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 16px 40px;
+            font-weight: 700;
             font-size: 1rem;
-            color: #bac2de;
-            max-width: 400px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            box-shadow:
+                0 0 20px rgba(99, 102, 241, 0.5),
+                0 0 40px rgba(99, 102, 241, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .neon-btn:hover::before {
+            left: 100%;
+        }
+
+        .neon-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow:
+                0 0 30px rgba(99, 102, 241, 0.8),
+                0 0 60px rgba(99, 102, 241, 0.5),
+                0 0 100px rgba(99, 102, 241, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .neon-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Secondary Button */
+        .glass-btn {
+            position: relative;
+            padding: 16px 40px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: white;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glass-btn:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .glass-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* ========== GLASSMORPHISM CARDS ========== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent, rgba(236, 72, 153, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 50px rgba(99, 102, 241, 0.2);
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        .glass-card:hover .card-icon {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        .card-icon {
+            transition: all 0.4s ease;
+        }
+
+        /* ========== ANIMATED BACKGROUND ========== */
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: orbFloat 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            top: -20%;
+            left: -10%;
+            opacity: 0.4;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            bottom: -10%;
+            right: -10%;
+            opacity: 0.3;
+            animation-delay: -7s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #06b6d4, #6366f1);
+            top: 40%;
+            left: 50%;
+            opacity: 0.2;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(50px, -30px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(30px, 30px) scale(1.05);
+            }
+        }
+
+        /* ========== FLOATING PARTICLES ========== */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            animation: particleRise 15s infinite linear;
+        }
+
+        @keyframes particleRise {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            transition: all 0.4s ease;
+        }
+
+        .navbar-scrolled {
+            background: rgba(10, 10, 26, 0.9) !important;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* ========== TYPING EFFECT ========== */
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: typingBounce 1.4s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ========== CHAT MOCKUP ========== */
+        .chat-mockup {
+            animation: mockupFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes mockupFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotateX(5deg) rotateY(-5deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotateX(0deg) rotateY(0deg);
+            }
+        }
+
+        /* ========== INPUT GLOW ========== */
+        .input-glow {
+            transition: all 0.3s ease;
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), 0 0 30px rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+        }
+
+        /* ========== FEATURE ICONS ========== */
+        .feature-icon {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== STATS COUNTER ========== */
+        .stat-number {
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body>
-    <h1>Vion Chat</h1>
-    <h2>Çok Yakında...</h2>
-    <p>
-        Discord'a modern bir alternatif üzerinde çalışıyoruz.
-        Kapalı beta davetiyeleri ve aylık güncelleme notları için bizi takipte kalın!
-    </p>
+
+<body class="text-white font-sans antialiased overflow-x-hidden">
+    <!-- ========== PRELOADER ========== -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-diamond">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <defs>
+                    <linearGradient id="preloaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="50%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#ec4899" />
+                    </linearGradient>
+                </defs>
+                <polygon points="50,5 95,50 50,95 5,50" fill="url(#preloaderGrad)" />
+                <polygon points="50,20 80,50 50,80 20,50" fill="#818cf8" opacity="0.8" />
+                <polygon points="50,35 65,50 50,65 35,50" fill="white" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Cursor Trail -->
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div id="cursor-trail-container"></div>
+
+    <!-- Animated Background -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <a href="#features" onclick="closeMobileMenu()">Özellikler</a>
+        <a href="#about" onclick="closeMobileMenu()">Hakkımızda</a>
+        <a href="#contact" onclick="closeMobileMenu()">İletişim</a>
+        <button class="neon-btn mt-8 w-full">Beta'ya Katıl</button>
+    </div>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav id="navbar" class="navbar fixed w-full z-50 top-0 px-6 py-5 flex justify-between items-center">
+        <a href="#" class="flex items-center gap-3 group">
+            <!-- 3D Rotating Diamond Logo -->
+            <div class="diamond-3d w-12 h-12">
+                <div class="diamond-3d-inner w-full h-full">
+                    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_15px_rgba(99,102,241,0.6)]">
+                        <defs>
+                            <linearGradient id="diamondGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" />
+                                <stop offset="50%" stop-color="#8b5cf6" />
+                                <stop offset="100%" stop-color="#ec4899" />
+                            </linearGradient>
+                            <linearGradient id="diamondGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#818cf8" />
+                                <stop offset="100%" stop-color="#c084fc" />
+                            </linearGradient>
+                        </defs>
+                        <polygon points="50,5 95,50 50,95 5,50" fill="url(#diamondGrad1)" />
+                        <polygon points="50,18 82,50 50,82 18,50" fill="url(#diamondGrad2)" opacity="0.9" />
+                        <polygon points="50,32 68,50 50,68 32,50" fill="white" opacity="0.9" />
+                        <polygon points="50,5 60,25 50,20 40,25" fill="white" opacity="0.6" />
+                    </svg>
+                </div>
+            </div>
+            <span class="text-2xl font-bold tracking-tight group-hover:text-indigo-400 transition-colors">
+                Vion<span class="gradient-text">Chat</span>
+            </span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center gap-8">
+            <a href="#features" class="nav-link text-gray-300 hover:text-white transition">Özellikler</a>
+            <a href="#about" class="nav-link text-gray-300 hover:text-white transition">Hakkımızda</a>
+            <a href="#contact" class="nav-link text-gray-300 hover:text-white transition">İletişim</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Dark/Light Mode Toggle -->
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                <!-- Sun Icon (shown in dark mode) -->
+                <svg id="sun-icon" class="text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                </svg>
+                <!-- Moon Icon (shown in light mode) -->
+                <svg id="moon-icon" class="hidden text-indigo-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- Desktop CTA Button -->
+            <button class="neon-btn text-sm py-3 px-6 hidden md:inline-flex">
+                Beta'ya Katıl
+            </button>
+
+            <!-- Mobile Hamburger Menu -->
+            <div id="hamburger" class="hamburger md:hidden" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <header class="relative min-h-screen flex items-center justify-center px-6 pt-20">
+        <div class="container mx-auto max-w-7xl flex flex-col lg:flex-row items-center gap-16">
+            <!-- Left Content -->
+            <div class="lg:w-1/2 text-center lg:text-left z-10">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-sm text-gray-300">🚀 Vion Chat Beta Yakında</span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-8">
+                    Sesinle<br>
+                    <span class="gradient-text">Bağlan</span>
+                </h1>
+
+                <p class="text-xl text-gray-400 mb-12 leading-relaxed max-w-lg mx-auto lg:mx-0">
+                    Kristal netliğinde ses, ultra düşük gecikme ve topluluk odaklı deneyim.
+                    <span class="text-white font-medium">Sınırları kaldır.</span>
+                </p>
+
+                <!-- Email Form -->
+                <form id="waitlist-form" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto lg:mx-0"
+                    onsubmit="handleForm(event)">
+                    <input type="email" required placeholder="E-posta adresin"
+                        class="input-glow flex-1 px-6 py-4 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none">
+                    <button type="submit" class="neon-btn whitespace-nowrap">
+                        Erken Erişim
+                    </button>
+                </form>
+                <p id="success-msg" class="hidden mt-4 text-green-400 font-medium animate-pulse">
+                    🎉 Harika! Seni listeye ekledik.
+                </p>
+                <p class="mt-4 text-sm text-gray-500">Spam yok. Sadece önemli güncellemeler.</p>
+
+                <!-- Stats -->
+                <div class="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
+                    <div class="text-center">
+                        <div class="stat-number text-3xl font-bold">10K+</div>
+                        <div class="text-sm text-gray-500">Bekleme Listesi</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number text-3xl font-bold">&lt;20ms</div>
+                        <div class="text-sm text-gray-500">Gecikme</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="stat-number text-3xl font-bold">256bit</div>
+                        <div class="text-sm text-gray-500">Şifreleme</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Visual - Giant Diamond + Chat Mockup -->
+            <div class="lg:w-1/2 relative flex justify-center items-center">
+                <!-- Hero Diamond -->
+                <div class="hero-diamond absolute -z-10">
+                    <svg viewBox="0 0 200 200" class="w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
+                        <defs>
+                            <linearGradient id="heroDiamond1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.6" />
+                                <stop offset="100%" stop-color="#ec4899" stop-opacity="0.4" />
+                            </linearGradient>
+                            <linearGradient id="heroDiamond2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#818cf8" stop-opacity="0.8" />
+                                <stop offset="100%" stop-color="#c084fc" stop-opacity="0.6" />
+                            </linearGradient>
+                        </defs>
+                        <polygon points="100,10 190,100 100,190 10,100" fill="url(#heroDiamond1)" opacity="0.3" />
+                        <polygon points="100,30 170,100 100,170 30,100" fill="url(#heroDiamond2)" opacity="0.4" />
+                        <polygon points="100,50 150,100 100,150 50,100" fill="white" opacity="0.1" />
+                    </svg>
+                </div>
+
+                <!-- Chat Mockup -->
+                <div class="chat-mockup relative z-10 w-full max-w-sm glass-card p-5" style="perspective: 1000px;">
+                    <!-- Window Controls -->
+                    <div class="flex items-center gap-2 mb-4 pb-4 border-b border-white/10">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="ml-auto text-xs text-gray-500">Vion Chat</span>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="space-y-4">
+                        <div class="flex items-end gap-2">
+                            <div
+                                class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs">
+                                👋</div>
+                            <div class="bg-white/10 p-3 rounded-2xl rounded-bl-none text-sm max-w-[200px]">
+                                Merhaba! Yeni arayüz nasıl olmuş?
+                            </div>
+                        </div>
+                        <div class="flex items-end gap-2 flex-row-reverse">
+                            <div
+                                class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-xs">
+                                🚀</div>
+                            <div
+                                class="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-2xl rounded-br-none text-sm max-w-[200px] shadow-lg shadow-indigo-500/20">
+                                Harika! Özellikle elmas logosu çok güzel! 💎
+                            </div>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <div
+                                class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs">
+                                👋</div>
+                            <div class="bg-white/10 p-3 rounded-2xl rounded-bl-none text-sm flex items-center gap-2">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input -->
+                    <div class="mt-5 flex gap-2">
+                        <div class="flex-1 h-10 bg-white/5 rounded-full border border-white/10"></div>
+                        <button
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
+                </path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- ========== FEATURES SECTION ========== -->
+    <section id="features" class="relative py-32 px-6">
+        <div class="container mx-auto max-w-7xl">
+            <div class="text-center mb-20 reveal">
+                <span
+                    class="inline-block px-4 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-sm font-medium mb-4">
+                    Özellikler
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Neden <span class="gradient-text">Vion Chat</span>?
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Sıradan sohbet uygulamalarından çok daha fazlası. Deneyimin yeni boyutu.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 reveal" style="transition-delay: 0.1s">
+                    <div class="card-icon feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Ultra Düşük Gecikme</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Gerçek zamanlı iletişimde milisaniyeler önemlidir. Vion, sesinizi ışık hızında iletir.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 reveal" style="transition-delay: 0.2s">
+                    <div class="card-icon feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Uçtan Uca Şifreleme</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Konuşmalarınız sadece odadakiler arasında kalır. Güvenliğiniz bizim önceliğimiz.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 reveal" style="transition-delay: 0.3s">
+                    <div class="card-icon feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Topluluk Odaları</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        İlgi alanlarına göre odalar oluştur, yeni insanlarla tanış veya arkadaşlarınla takıl.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="relative py-32 px-6">
+        <div class="container mx-auto max-w-4xl text-center reveal">
+            <div class="glass-card p-12 md:p-16">
+                <!-- Mini Diamond -->
+                <div class="mx-auto w-20 h-20 mb-8">
+                    <svg viewBox="0 0 100 100" class="w-full h-full animate-pulse">
+                        <polygon points="50,10 90,50 50,90 10,50" fill="url(#diamondGrad1)" />
+                        <polygon points="50,25 75,50 50,75 25,50" fill="url(#diamondGrad2)" />
+                        <polygon points="50,40 60,50 50,60 40,50" fill="white" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    Geleceğin Sesli İletişimine <span class="gradient-text">Hazır Mısın?</span>
+                </h2>
+                <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+                    Beta erişimi için yetkili kullanıcılar arasına katıl. İlk deneyenlerden biri ol.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="neon-btn">Beta'ya Katıl</button>
+                    <button class="glass-btn">Daha Fazla Bilgi</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="relative py-12 px-6 border-t border-white/5">
+        <div class="container mx-auto max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="diamond-logo" style="width: 32px; height: 32px;">
+                        <svg viewBox="0 0 100 100" class="w-8 h-8">
+                            <polygon points="50,5 95,50 50,95 5,50" fill="url(#diamondGrad1)" />
+                            <polygon points="50,18 82,50 50,82 18,50" fill="url(#diamondGrad2)" />
+                            <polygon points="50,32 68,50 50,68 32,50" fill="white" />
+                        </svg>
+                    </div>
+                    <span class="font-bold">Vion Chat</span>
+                </div>
+                <p class="text-sm text-gray-500">© 2024 Vion Chat. Tüm hakları saklıdır.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">Twitter</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Discord</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        // ===== FLOATING PARTICLES =====
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (12 + Math.random() * 8) + 's';
+            particle.style.width = (3 + Math.random() * 4) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+
+        // ===== SCROLL REVEAL =====
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // ===== NAVBAR SCROLL =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+        // ===== PARALLAX ORBS =====
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            const x = (e.clientX / window.innerWidth - 0.5) * 50;
+            const y = (e.clientY / window.innerHeight - 0.5) * 50;
+
+            orbs.forEach((orb, i) => {
+                const speed = (i + 1) * 0.2;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+
+        // ===== FORM HANDLER =====
+        function handleForm(e) {
+            e.preventDefault();
+            const input = e.target.querySelector('input');
+            const btn = e.target.querySelector('button');
+            const msg = document.getElementById('success-msg');
+
+            btn.innerHTML = '<span class="animate-pulse">Gönderiliyor...</span>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '✓ Kaydolundu';
+                btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                msg.classList.remove('hidden');
+                input.value = '';
+
+                // Confetti effect
+                createConfetti(btn);
+            }, 1200);
+        }
+
+        function createConfetti(el) {
+            const rect = el.getBoundingClientRect();
+            const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#22c55e', '#f59e0b'];
+
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    left: ${rect.left + rect.width / 2}px;
+                    top: ${rect.top}px;
+                    width: 8px;
+                    height: 8px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+                document.body.appendChild(confetti);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 8 + Math.random() * 8;
+                let vx = Math.cos(angle) * velocity;
+                let vy = Math.sin(angle) * velocity - 10;
+                let x = 0, y = 0, opacity = 1;
+
+                const animate = () => {
+                    vy += 0.5;
+                    x += vx;
+                    y += vy;
+                    opacity -= 0.02;
+                    confetti.style.transform = `translate(${x}px, ${y}px) rotate(${x * 10}deg)`;
+                    confetti.style.opacity = opacity;
+                    if (opacity > 0) requestAnimationFrame(animate);
+                    else confetti.remove();
+                };
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // ===== PRELOADER =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+
+        // ===== CURSOR TRAIL EFFECT =====
+        const cursorDot = document.getElementById('cursor-dot');
+        const trailContainer = document.getElementById('cursor-trail-container');
+        let mouseX = 0, mouseY = 0;
+        let trailTimeout;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Main cursor dot
+            cursorDot.style.left = mouseX - 4 + 'px';
+            cursorDot.style.top = mouseY - 4 + 'px';
+            cursorDot.style.opacity = '1';
+
+            // Create trail particle
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = mouseX - 3 + 'px';
+            trail.style.top = mouseY - 3 + 'px';
+            trail.style.background = `hsl(${Math.random() * 60 + 240}, 70%, 60%)`;
+            trailContainer.appendChild(trail);
+
+            // Fade out and remove trail
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = 'scale(0)';
+                trail.style.transition = 'all 0.5s ease';
+                setTimeout(() => trail.remove(), 500);
+            }, 50);
+
+            // Hide cursor after inactivity
+            clearTimeout(trailTimeout);
+            trailTimeout = setTimeout(() => {
+                cursorDot.style.opacity = '0';
+            }, 3000);
+        });
+
+        // ===== DARK/LIGHT MODE TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Check saved theme on load
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('sun-icon').classList.add('hidden');
+            document.getElementById('moon-icon').classList.remove('hidden');
+        }
+
+        // ===== MOBILE MENU =====
+        function toggleMobileMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-overlay');
+
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-overlay');
+
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('mobile-overlay').addEventListener('click', closeMobileMenu);
+    </script>
 </body>
+
 </html>
