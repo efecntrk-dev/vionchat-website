@@ -87,11 +87,22 @@
     .nav-logo svg { filter: drop-shadow(0 0 12px rgba(0,212,126,0.5)); }
     .nav-logo-text { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
     .nav-logo-text span { background: linear-gradient(135deg, #00d47e, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
     .nav-badge-beta {
       padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
       background: rgba(0,212,126,0.1); color: var(--primary-light);
-      border: 1px solid rgba(0,212,126,0.2); letter-spacing: 1px; text-transform: uppercase;
+      border: 1px solid rgba(0,212,126,0.2); letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0;
     }
+    .lang-toggle {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 10px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-secondary); font-size: 13px; font-weight: 600;
+      font-family: 'Inter', sans-serif; transition: all 0.3s; flex-shrink: 0;
+    }
+    .lang-toggle:hover { border-color: var(--border-glow); color: var(--text-primary); background: rgba(0,212,126,0.06); }
+    .lang-toggle svg { width: 16px; height: 16px; }
+    .lang-toggle .lang-code { letter-spacing: 0.5px; }
 
     /* ===== HERO ===== */
     .hero {
@@ -345,7 +356,13 @@
       </svg>
       <span class="nav-logo-text">Vion<span>Chat</span></span>
     </a>
-    <div class="nav-badge-beta">⚡ BETA</div>
+    <div class="nav-right">
+      <div class="nav-badge-beta">⚡ BETA</div>
+      <button class="lang-toggle" id="langToggle" onclick="toggleLang()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        <span class="lang-code" id="langLabel">TR</span>
+      </button>
+    </div>
   </nav>
 
   <!-- Hero -->
@@ -371,35 +388,35 @@
 
       <div class="hero-badge">
         <div class="dot"></div>
-        <span>In Development</span>
+        <span data-i18n="heroBadge">In Development</span>
       </div>
 
       <h1 class="hero-title">
-        <span class="hero-title-accent">VionChat</span><br>Coming Soon
+        <span class="hero-title-accent">VionChat</span><br><span data-i18n="heroTitle">Coming Soon</span>
       </h1>
 
-      <p class="hero-desc">
+      <p class="hero-desc" data-i18n-html="heroDesc">
         A next-generation communication platform offering real-time messaging, secure authentication
         and modern community experience is coming. <strong style="color:#cbd5e1">Sign up for early access.</strong>
       </p>
 
       <!-- Countdown -->
       <div class="countdown" id="countdown">
-        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Days</span></div>
+        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label" data-i18n="days">Days</span></div>
         <span class="countdown-sep">:</span>
-        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Hours</span></div>
+        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label" data-i18n="hours">Hours</span></div>
         <span class="countdown-sep">:</span>
-        <div class="countdown-item"><span class="countdown-value" id="cd-mins">00</span><span class="countdown-label">Minutes</span></div>
+        <div class="countdown-item"><span class="countdown-value" id="cd-mins">00</span><span class="countdown-label" data-i18n="minutes">Minutes</span></div>
         <span class="countdown-sep">:</span>
-        <div class="countdown-item"><span class="countdown-value" id="cd-secs">00</span><span class="countdown-label">Seconds</span></div>
+        <div class="countdown-item"><span class="countdown-value" id="cd-secs">00</span><span class="countdown-label" data-i18n="seconds">Seconds</span></div>
       </div>
 
       <!-- Email Signup -->
       <form class="signup-form" id="signupForm" onsubmit="handleSignup(event)">
-        <input type="email" class="signup-input" placeholder="Your email address..." required>
-        <button type="submit" class="signup-btn">Notify Me</button>
+        <input type="email" class="signup-input" id="signupInput" data-i18n-ph="emailPlaceholder" placeholder="Your email address..." required>
+        <button type="submit" class="signup-btn" data-i18n="notifyBtn">Notify Me</button>
       </form>
-      <p class="signup-success" id="signupSuccess">✅ You're in! We'll notify you when the beta launches.</p>
+      <p class="signup-success" id="signupSuccess" data-i18n="signupSuccess">✅ You're in! We'll notify you when the beta launches.</p>
     </div>
   </section>
 
@@ -407,45 +424,45 @@
   <section class="features reveal" id="features">
     <div class="features-container">
       <div class="section-header">
-        <div class="section-badge">✨ Features</div>
-        <h2 class="section-title">What's Coming?</h2>
-        <p class="section-desc">Highlighted features you'll experience with VionChat Beta</p>
+        <div class="section-badge" data-i18n="featuresBadge">✨ Features</div>
+        <h2 class="section-title" data-i18n="featuresTitle">What's Coming?</h2>
+        <p class="section-desc" data-i18n="featuresDesc">Highlighted features you'll experience with VionChat Beta</p>
       </div>
       <div class="features-grid">
         <div class="feature-card reveal">
           <div class="feature-icon c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-          <h3>Instant Messaging</h3>
-          <p>Seamless, real-time chat experience powered by WebSocket technology.</p>
-          <span class="feature-tag">Real-Time</span>
+          <h3 data-i18n="f1Title">Instant Messaging</h3>
+          <p data-i18n="f1Desc">Seamless, real-time chat experience powered by WebSocket technology.</p>
+          <span class="feature-tag" data-i18n="f1Tag">Real-Time</span>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <h3>Secure Authentication</h3>
-          <p>2FA support, encrypted sessions and secure registration system.</p>
-          <span class="feature-tag">2FA Protected</span>
+          <h3 data-i18n="f2Title">Secure Authentication</h3>
+          <p data-i18n="f2Desc">2FA support, encrypted sessions and secure registration system.</p>
+          <span class="feature-tag" data-i18n="f2Tag">2FA Protected</span>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <h3>Friend System</h3>
-          <p>Add friends, manage requests and track online status.</p>
-          <span class="feature-tag">Social</span>
+          <h3 data-i18n="f3Title">Friend System</h3>
+          <p data-i18n="f3Desc">Add friends, manage requests and track online status.</p>
+          <span class="feature-tag" data-i18n="f3Tag">Social</span>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
-          <h3>Global Chat</h3>
-          <p>Join the community with a public global chat room.</p>
-          <span class="feature-tag">Community</span>
+          <h3 data-i18n="f4Title">Global Chat</h3>
+          <p data-i18n="f4Desc">Join the community with a public global chat room.</p>
+          <span class="feature-tag" data-i18n="f4Tag">Community</span>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon c5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-          <h3>Server & Channel System</h3>
-          <p>Create your own server, set up channels and manage your community.</p>
-          <span class="feature-tag">Coming Soon</span>
+          <h3 data-i18n="f5Title">Server & Channel System</h3>
+          <p data-i18n="f5Desc">Create your own server, set up channels and manage your community.</p>
+          <span class="feature-tag" data-i18n="f5Tag">Coming Soon</span>
         </div>
         <div class="feature-card reveal">
           <div class="feature-icon c6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/><circle cx="12" cy="12" r="4"/></svg></div>
-          <h3>Modern Interface</h3>
-          <p>Glassmorphism design, dark theme and smooth animations.</p>
+          <h3 data-i18n="f6Title">Modern Interface</h3>
+          <p data-i18n="f6Desc">Glassmorphism design, dark theme and smooth animations.</p>
           <span class="feature-tag">Premium UI</span>
         </div>
       </div>
@@ -455,8 +472,8 @@
   <!-- App Preview -->
   <section class="preview-section reveal">
     <div class="section-header">
-      <div class="section-badge">👀 Preview</div>
-      <h2 class="section-title">Sneak Peek</h2>
+      <div class="section-badge" data-i18n="previewBadge">👀 Preview</div>
+      <h2 class="section-title" data-i18n="previewTitle">Sneak Peek</h2>
     </div>
     <div class="preview-container">
       <div class="preview-window">
@@ -470,43 +487,43 @@
           <div class="preview-sidebar">
             <div class="preview-sidebar-item active">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-              Home
+              <span data-i18n="pvHome">Home</span>
             </div>
             <div class="preview-sidebar-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-              Global Chat
+              <span data-i18n="pvGlobal">Global Chat</span>
             </div>
             <div class="preview-sidebar-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-              Friends
+              <span data-i18n="pvFriends">Friends</span>
             </div>
           </div>
           <div class="preview-main">
-            <div class="preview-main-header">🌍 Global Chat</div>
+            <div class="preview-main-header" data-i18n="pvHeader">🌍 Global Chat</div>
             <div class="preview-messages">
               <div class="preview-msg">
-                <div class="preview-msg-avatar">E</div>
+                <div class="preview-msg-avatar">J</div>
                 <div class="preview-msg-body">
-                  <div class="preview-msg-name">Efe <span>Today 15:30</span></div>
-                  <div class="preview-msg-text">VionChat Beta looks amazing! 🚀</div>
+                  <div class="preview-msg-name">Jake <span>Today 15:30</span></div>
+                  <div class="preview-msg-text" data-i18n="pvMsg1">VionChat Beta looks amazing! 🚀</div>
                 </div>
               </div>
               <div class="preview-msg">
                 <div class="preview-msg-avatar alt">V</div>
                 <div class="preview-msg-body">
                   <div class="preview-msg-name">VionBot <span>Today 15:31</span></div>
-                  <div class="preview-msg-text">Welcome! The beta version will be open to everyone very soon 🎉</div>
+                  <div class="preview-msg-text" data-i18n="pvMsg2">Welcome! The beta version will be open to everyone very soon 🎉</div>
                 </div>
               </div>
               <div class="preview-msg">
-                <div class="preview-msg-avatar">A</div>
+                <div class="preview-msg-avatar">R</div>
                 <div class="preview-msg-body">
-                  <div class="preview-msg-name">Alex <span>Today 15:32</span></div>
+                  <div class="preview-msg-name">Ryan <span>Today 15:32</span></div>
                   <div class="preview-msg-text"><span class="typing-dots"><span></span><span></span><span></span></span></div>
                 </div>
               </div>
             </div>
-            <div class="preview-input">💬 Type a message...</div>
+            <div class="preview-input" data-i18n="pvInput">💬 Type a message...</div>
           </div>
         </div>
       </div>
@@ -519,7 +536,7 @@
       <svg viewBox="0 0 100 100" width="24" height="24"><polygon points="50,5 95,50 50,95 5,50" fill="#00d47e"/><polygon points="50,20 80,50 50,80 20,50" fill="#34d399" opacity="0.9"/><polygon points="50,35 65,50 50,65 35,50" fill="white" opacity="0.9"/></svg>
       <span>VionChat</span>
     </div>
-    <div class="footer-right">© 2026 VionChat. All rights reserved.</div>
+    <div class="footer-right" data-i18n="footerRights">© 2026 VionChat. All rights reserved.</div>
   </footer>
 
   <script>
@@ -573,6 +590,87 @@
       p.style.opacity = 0.2 + Math.random() * 0.4;
       particlesContainer.appendChild(p);
     }
+
+    // ===== i18n LANGUAGE SYSTEM =====
+    const translations = {
+      en: {
+        heroBadge: 'In Development',
+        heroTitle: 'Coming Soon',
+        heroDesc: 'A next-generation communication platform offering real-time messaging, secure authentication and modern community experience is coming. <strong style="color:#cbd5e1">Sign up for early access.</strong>',
+        days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds',
+        emailPlaceholder: 'Your email address...',
+        notifyBtn: 'Notify Me',
+        signupSuccess: "✅ You're in! We'll notify you when the beta launches.",
+        featuresBadge: '✨ Features', featuresTitle: "What's Coming?",
+        featuresDesc: "Highlighted features you'll experience with VionChat Beta",
+        f1Title: 'Instant Messaging', f1Desc: 'Seamless, real-time chat experience powered by WebSocket technology.', f1Tag: 'Real-Time',
+        f2Title: 'Secure Authentication', f2Desc: '2FA support, encrypted sessions and secure registration system.', f2Tag: '2FA Protected',
+        f3Title: 'Friend System', f3Desc: 'Add friends, manage requests and track online status.', f3Tag: 'Social',
+        f4Title: 'Global Chat', f4Desc: 'Join the community with a public global chat room.', f4Tag: 'Community',
+        f5Title: 'Server & Channel System', f5Desc: 'Create your own server, set up channels and manage your community.', f5Tag: 'Coming Soon',
+        f6Title: 'Modern Interface', f6Desc: 'Glassmorphism design, dark theme and smooth animations.',
+        previewBadge: '👀 Preview', previewTitle: 'Sneak Peek',
+        pvHome: 'Home', pvGlobal: 'Global Chat', pvFriends: 'Friends',
+        pvHeader: '🌍 Global Chat',
+        pvMsg1: 'VionChat Beta looks amazing! 🚀',
+        pvMsg2: 'Welcome! The beta version will be open to everyone very soon 🎉',
+        pvInput: '💬 Type a message...',
+        footerRights: '© 2026 VionChat. All rights reserved.'
+      },
+      tr: {
+        heroBadge: 'Geliştirme Aşamasında',
+        heroTitle: 'Çok Yakında',
+        heroDesc: 'Gerçek zamanlı mesajlaşma, güvenli kimlik doğrulama ve modern topluluk deneyimi sunan yeni nesil iletişim platformu geliyor. <strong style="color:#cbd5e1">İlk erişim için kayıt ol.</strong>',
+        days: 'Gün', hours: 'Saat', minutes: 'Dakika', seconds: 'Saniye',
+        emailPlaceholder: 'E-posta adresin...',
+        notifyBtn: 'Beni Bilgilendir',
+        signupSuccess: '✅ Kayıt başarılı! Beta açıldığında seni bilgilendireceğiz.',
+        featuresBadge: '✨ Özellikler', featuresTitle: 'Neler Geliyor?',
+        featuresDesc: 'VionChat Beta ile tanışacağınız öne çıkan özellikler',
+        f1Title: 'Anlık Mesajlaşma', f1Desc: 'WebSocket teknolojisi ile gerçek zamanlı, kesintisiz sohbet deneyimi.', f1Tag: 'Gerçek Zamanlı',
+        f2Title: 'Güvenli Kimlik Doğrulama', f2Desc: '2FA desteği, şifreli oturumlar ve güvenli kayıt sistemi.', f2Tag: '2FA Korumalı',
+        f3Title: 'Arkadaşlık Sistemi', f3Desc: 'Arkadaş ekleme, istek yönetimi ve çevrimiçi durum takibi.', f3Tag: 'Sosyal',
+        f4Title: 'Global Sohbet', f4Desc: 'Herkese açık global sohbet odası ile topluluğa katıl.', f4Tag: 'Topluluk',
+        f5Title: 'Sunucu & Kanal Sistemi', f5Desc: 'Kendi sunucunu kur, kanallar oluştur ve topluluğunu yönet.', f5Tag: 'Yakında',
+        f6Title: 'Modern Arayüz', f6Desc: 'Glassmorphism tasarım, karanlık tema ve akıcı animasyonlar.',
+        previewBadge: '👀 Ön İzleme', previewTitle: 'Arayüze Göz At',
+        pvHome: 'Ana Sayfa', pvGlobal: 'Global Sohbet', pvFriends: 'Arkadaşlar',
+        pvHeader: '🌍 Global Sohbet',
+        pvMsg1: 'VionChat Beta harika görünüyor! 🚀',
+        pvMsg2: 'Hoş geldin! Beta sürüm çok yakında herkese açılacak 🎉',
+        pvInput: '💬 Mesaj yaz...',
+        footerRights: '© 2026 VionChat. Tüm hakları saklıdır.'
+      }
+    };
+
+    let currentLang = localStorage.getItem('vion-lang') || 'en';
+
+    function applyLang(lang) {
+      const t = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key]) el.innerHTML = t[key];
+      });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.getAttribute('data-i18n-ph');
+        if (t[key]) el.placeholder = t[key];
+      });
+      document.getElementById('langLabel').textContent = lang === 'en' ? 'TR' : 'EN';
+      document.documentElement.lang = lang === 'en' ? 'en' : 'tr';
+      localStorage.setItem('vion-lang', lang);
+      currentLang = lang;
+    }
+
+    function toggleLang() {
+      applyLang(currentLang === 'en' ? 'tr' : 'en');
+    }
+
+    // Apply saved language on load
+    applyLang(currentLang);
   </script>
 </body>
 </html>
